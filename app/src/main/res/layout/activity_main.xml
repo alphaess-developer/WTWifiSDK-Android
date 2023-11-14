@@ -24,6 +24,12 @@
         android:text="@string/update_ems_data"
         android:id="@+id/updateEMSData"
         />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="@string/update_ems_extend_data"
+        android:id="@+id/updateEMSExtendData"
+        />
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

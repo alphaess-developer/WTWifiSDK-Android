@@ -18,11 +18,7 @@ import android.widget.Toast;
 
 import com.alpha.wifisdk.WTWifiCenter;
 import com.alpha.wifisdk.callback.Callback;
-import com.alpha.wifisdk.callback.WTWifiCenterDelegate;
-import com.alpha.wifisdk.model.WTRunningModel;
-import com.alpha.wifisdk.model.WTSafetyModel;
-import com.alpha.wifisdk.model.WTStaInfoModel;
-import com.alpha.wifisdk.model.WTSystemModel;
+import com.alpha.wifisdk.model.WTUpdateExtendModel;
 import com.alpha.wifisdk.model.WTUpdateModel;
 
 import java.util.ArrayList;
@@ -31,7 +27,7 @@ import java.util.Map;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    private Button queryWifiList,queryConnectInfo,updateEMSData;
+    private Button queryWifiList,queryConnectInfo,updateEMSData,updateEMSExtendData;
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> datas = new ArrayList<String>();
@@ -44,6 +40,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         queryWifiList = findViewById(R.id.queryWifiList);
         queryConnectInfo = findViewById(R.id.queryConnectInfo);
         updateEMSData = findViewById(R.id.updateEMSData);
+        updateEMSExtendData = findViewById(R.id.updateEMSExtendData);
         listView = findViewById(R.id.wifiListLv);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,datas);
         listView.setAdapter(adapter);
@@ -56,6 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         queryWifiList.setOnClickListener(this);
         queryConnectInfo.setOnClickListener(this);
         updateEMSData.setOnClickListener(this);
+        updateEMSExtendData.setOnClickListener(this);
     }
 
     @Override
@@ -70,6 +68,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.updateEMSData:
                 updateEMSData();
                 break;
+            case R.id.updateEMSExtendData:
+                updateEMSExtendData();
+                break;
 
 
         }
@@ -78,7 +79,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void queryWifiList() {
         showProgressDialog();
-        WTWifiCenter.getInstance(this).fetchWifiList(new Callback<List<String>>() {
+        WTWifiCenter.getInstance().fetchWifiList(new Callback<List<String>>() {
             @Override
             public void onSuccess(List<String> result) {
                 hideProgressDialog();
@@ -98,7 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void queryConnectInfo(){
         showProgressDialog();
-        WTWifiCenter.getInstance(this).loadWifiConfiguration(new Callback<Map<String, Object>>() {
+        WTWifiCenter.getInstance().loadWifiConfiguration(new Callback<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
                 hideProgressDialog();
@@ -118,7 +119,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
         showProgressDialog();
         WTUpdateModel updateModel = new WTUpdateModel();
         updateModel.setACDC("1");
-        WTWifiCenter.getInstance(this).updateEMSConfigurationWith(updateModel, new Callback<Boolean>() {
+        WTWifiCenter.getInstance().updateEMSConfiguration(updateModel, new Callback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                hideProgressDialog();
+                Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    private void updateEMSExtendData(){
+        showProgressDialog();
+        WTUpdateExtendModel updateModel = new WTUpdateExtendModel();
+        updateModel.setOnGridPower("1024");
+        WTWifiCenter.getInstance().updateEMSConfigurationByExtendProtocol(updateModel, new Callback<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
                 hideProgressDialog();
@@ -164,7 +185,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if(password.trim().length() < 1){
                     Toast.makeText(MainActivity.this,getString(R.string.intput_password_tip),Toast.LENGTH_SHORT).show();
                 }else{
-                    WTWifiCenter.getInstance(MainActivity.this).wifiConfigurationWith(ssid, password.trim(), new Callback<Boolean>() {
+                    WTWifiCenter.getInstance().wifiConfigurationWith(ssid, password.trim(), new Callback<Boolean>() {
                         @Override
                         public void onSuccess(Boolean result) {
                             if(result){

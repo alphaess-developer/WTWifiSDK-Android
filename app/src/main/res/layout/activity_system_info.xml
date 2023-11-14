@@ -23,8 +23,8 @@
             android:layout_height="45dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="10dp"
-            android:text="@string/ems_running_info"
-            android:id="@+id/getRunningInfo"
+            android:text="@string/ems_extend_system_info"
+            android:id="@+id/getExtendSystemInfo"
             />
 
     </LinearLayout>
@@ -37,8 +37,30 @@
             android:layout_height="45dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="10dp"
-            android:text="@string/ems_self_check_info"
-            android:id="@+id/getSelfCheckInfo"
+            android:text="@string/ems_running_info"
+            android:id="@+id/getRunningInfo"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/ems_extend_running_info"
+            android:id="@+id/getExtendRunningInfo"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/ems_safe_info"
+            android:id="@+id/getItalySafetyInfo"
             />
         <View
             android:layout_width="0dp"

@@ -13,7 +13,9 @@ import com.alpha.wifisdk.callback.Callback;
 import java.util.Map;
 
 public class SystemInfoActivity extends Activity implements View.OnClickListener {
-    private Button getSystemInfo, getRunningInfo,getSelfCheckInfo;
+    private Button getSystemInfo, getRunningInfo,getExtendSystemInfo,getExtendRunningInfo;
+
+    private Button getItalySafetyInfo;
     private ProgressDialog pd;
     private TextView content;
 
@@ -23,11 +25,15 @@ public class SystemInfoActivity extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_system_info);
         getSystemInfo = findViewById(R.id.getSystemInfo);
         getRunningInfo = findViewById(R.id.getRunningInfo);
-        getSelfCheckInfo = findViewById(R.id.getSelfCheckInfo);
+        getExtendSystemInfo = findViewById(R.id.getExtendSystemInfo);
+        getExtendRunningInfo = findViewById(R.id.getExtendRunningInfo);
+        getItalySafetyInfo = findViewById(R.id.getItalySafetyInfo);
         content = findViewById(R.id.content);
         getSystemInfo.setOnClickListener(this);
+        getExtendSystemInfo.setOnClickListener(this);
         getRunningInfo.setOnClickListener(this);
-        getSelfCheckInfo.setOnClickListener(this);
+        getExtendRunningInfo.setOnClickListener(this);
+        getItalySafetyInfo.setOnClickListener(this);
     }
 
     @Override
@@ -36,11 +42,17 @@ public class SystemInfoActivity extends Activity implements View.OnClickListener
             case R.id.getSystemInfo:
                 getSystemInfo();
                 break;
+            case R.id.getExtendSystemInfo:
+                getExtendSystemInfo();
+                break;
             case R.id.getRunningInfo:
                 getRunningInfo();
                 break;
-            case R.id.getSelfCheckInfo:
-                getSelfCheckInfo();
+            case R.id.getExtendRunningInfo:
+                getExtendRunningInfo();
+                break;
+            case R.id.getItalySafetyInfo:
+                getItalySafetyInfo();
                 break;
         }
 
@@ -48,11 +60,29 @@ public class SystemInfoActivity extends Activity implements View.OnClickListener
 
     private void getSystemInfo(){
         showProgressDialog();
-        WTWifiCenter.getInstance(this).loadSystemInfo(new Callback<Map<String, String>>() {
+        WTWifiCenter.getInstance().loadSystemInfo(new Callback<Map<String, String>>() {
             @Override
             public void onSuccess(Map<String, String> result) {
                 hideProgressDialog();
-                content.setText("systeminfo:"+result.toString());
+                content.setText("systemInfo:"+result.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                hideProgressDialog();
+                Toast.makeText(SystemInfoActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void getExtendSystemInfo(){
+        showProgressDialog();
+        WTWifiCenter.getInstance().loadSystemInfoByExtendProtocol(new Callback<Map<String, String>>() {
+            @Override
+            public void onSuccess(Map<String, String> result) {
+                hideProgressDialog();
+                content.setText("extendSystemInfo:"+result.toString());
             }
 
             @Override
@@ -65,11 +95,11 @@ public class SystemInfoActivity extends Activity implements View.OnClickListener
     }
     private void getRunningInfo(){
         showProgressDialog();
-        WTWifiCenter.getInstance(this).loadRunningInfo(new Callback<Map<String, String>>() {
+        WTWifiCenter.getInstance().loadRunningInfo(new Callback<Map<String, String>>() {
             @Override
             public void onSuccess(Map<String, String> result) {
                 hideProgressDialog();
-                content.setText("runninginfo:"+result.toString());
+                content.setText("runningInfo:"+result.toString());
             }
 
             @Override
@@ -80,13 +110,31 @@ public class SystemInfoActivity extends Activity implements View.OnClickListener
         });
 
     }
-    private void getSelfCheckInfo(){
+
+    private void getExtendRunningInfo(){
         showProgressDialog();
-        WTWifiCenter.getInstance(this).loadSelfCheckInfo(new Callback<Map<String, String>>() {
+        WTWifiCenter.getInstance().loadRunningInfoByExtendProtocol(new Callback<Map<String, String>>() {
             @Override
             public void onSuccess(Map<String, String> result) {
                 hideProgressDialog();
-                content.setText("loadSelfCheckInfo:"+result.toString());
+                content.setText("extendRunningInfo:"+result.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                hideProgressDialog();
+                Toast.makeText(SystemInfoActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    private void getItalySafetyInfo(){
+        showProgressDialog();
+        WTWifiCenter.getInstance().loadAutoCheckInfoWithItalianSafety(new Callback<Map<String, String>>() {
+            @Override
+            public void onSuccess(Map<String, String> result) {
+                hideProgressDialog();
+                content.setText("safetyInfo:"+result.toString());
             }
 
             @Override
