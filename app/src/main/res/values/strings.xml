@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">WifiSdkExample</string>
+    <string name="query_wifi_list">查询WiFi列表</string>
+    <string name="query_connect_info">查询已配网信息</string>
+    <string name="update_ems_data">更新EMS参数配置</string>
+    <string name="loading">加载中</string>
+    <string name="connect_tip">要进行配网，请先输入%s的密码</string>
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
+    <string name="intput_password_tip">请输入wifi密码</string>
+    <string name="connect_success">配网成功</string>
+    <string name="connect_false">配网失败</string>
+    <string name="no_connect_info">未检测到历史配置</string>
+    <string name="exist_connect_info">已检测到历史配置</string>
+    <string name="connect_info">所配置SSID:%s,\n密码:%s,\n连接状态:%s</string>
+    <string name="has_connect">已连接</string>
+    <string name="not_connect">未连接</string>
+    <string name="continue_connect">继续配网</string>
+    <string name="skip_connect">跳过配网</string>
+    <string name="update_success">更新成功</string>
+    <string name="ems_system_info">EMS系统信息</string>
+    <string name="ems_running_info">EMS运行信息</string>
+    <string name="ems_safe_info">EMS安规信息</string>
+    <string name="ems_self_check_info">EMS自检信息</string>
+</resources>
