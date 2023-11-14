@@ -8,225 +8,219 @@ The system requirement for WTWifiSDK is Android 5.0
 
 ## Install
 
-* Add the following configuration to the build.gradle file under the project.
+* Place wifisdk-2.1.5.aar in the libs directory of the project into the libs directory of your own project
 
-  ```groovy
-  allprojects {
-      repositories {
-        maven { url 'https://jitpack.io' }
-      }
-  }
-  ```
-
+  
+  
 * Add the following configuration to the module's build.gradle file.
 
   ```groovy
   dependencies {
-  	implementation 'com.github.alphaess-developer:WTWifiSDK:1.0.0'
+  	implementation fileTree(dir: 'libs', include: ['*.aar'])
   }
-  ```
-
-* Add android:usesCleartextTraffic="true" to the AndroidManifest.xml file
-
-  ```xml
-  <?xml version="1.0" encoding="utf-8"?>
-  <manifest ...>
-      <application
-          ...
-          android:usesCleartextTraffic="true"
-          ...>
-          ...
-      </application>
-  </manifest>
   ```
 
   
 
 ## How to use?
 
-* Add delegate with `WTWifiCenterDelegate`, for example:
+* You can get device serial number from ap, for example:
 
   ```java
-          WTWifiCenter.getInstance(this).addWifiProtocolListener(new WTWifiCenterDelegate() {
+      WTWifiCenter.getInstance().fetchSystemSN(new Callback<String>() {
               @Override
-              public void didDisconnectedWith(String s) {
-  
+              public void onSuccess(String s) {
+                  
               }
   
               @Override
-              public void didConnectedWith(String s) {
-  
-              }
-  
-              @Override
-              public void didReceiveEMSSystemInfo(WTSystemModel wtSystemModel) {
-  
-              }
-  
-              @Override
-              public void didReceiveEMSRunningInfo(WTRunningModel wtRunningModel) {
-  
-              }
-  
-              @Override
-              public void didReceiveEMSSafetyInfo(WTSafetyModel wtSafetyModel) {
-  
-              }
-  
-              @Override
-              public void didUpdateEMSParametersSuccess() {
-  
-              }
-              @Override
-              public void receiveInfoErr(Exception e) {
+              public void onError(Exception e) {
   
               }
           });
   ```
 
-  
-
-* Start the wifi configuration when the configuration view will appear, and release the wifi configuration when the view dealloc,  for example:
-
-  ```java
-  WTWifiCenter.getInstance(this).startConfiguration();
-  WTWifiCenter.getInstance(this).releaseConfiguration();
-  ```
-
-  
-
 * Get the wifi ssid list from wifi collector device, for example:
 
   ```java
-  WTWifiCenter.getInstance(this).fetchWifiList(new Callback<List<String>>() {
-       @Override
-       public void onSuccess(List<String> wfList) {
+         WTWifiCenter.getInstance().fetchWifiList(new Callback<List<String>>() {
+              @Override
+              public void onSuccess(List<String> strings) {
+                  
+              }
   
-       }
+              @Override
+              public void onError(Exception e) {
   
-       @Override
-       public void onError(Exception e) {
-  
-       }
-  });
+              }
+          });
   ```
-
-  
-
-  
 
 * And if you want to config the local wifi for energy storage device, use this api:
 
   ```java
-  WTWifiCenter.getInstance(MainActivity.this).wifiConfigurationWith("ssid", "password", new Callback<Boolean>() {
-       @Override
-       public void onSuccess(Boolean aBoolean) {
-                           
-       }
-       @Override
-       public void onError(Exception e) {
-                              
-       }
-   });    
-  ```
-
+        WTWifiCenter.getInstance().wifiConfigurationWith("ssid", "password", new Callback<Boolean>() {
+              @Override
+              public void onSuccess(Boolean aBoolean) {
+                  
+              }
   
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
+  ```
 
 * If you want to see historical configuration then use Api like this：
 
   ```java
-  WTWifiCenter.getInstance(this).loadWifiConfiguration(new Callback<WTStaInfoModel>() {
-      @Override
-      public void onSuccess(WTStaInfoModel wtStaInfoModel) {
+     WTWifiCenter.getInstance().loadWifiConfiguration(new Callback<Map<String, Object>>() {
+              @Override
+              public void onSuccess(Map<String, Object> stringObjectMap) {
                   
-      }
+              }
   
-      @Override
-      public void onError(Exception e) {
-                  
-      }
-  });
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
-
-  
 
 * How to load the system information of energy management system?
 
-  **Step one:**
+  **Just call this api:**
 
-  Send EMS commands to query the system information of energy storage devices.
+  The result will be called back by `loadSystemInfo`.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
 
   ```java
-  WTWifiCenter.getInstance(this).sendSystemInfoCommand();
+        WTWifiCenter.getInstance().loadSystemInfo(new Callback<Map<String, String>>() {
+              @Override
+              public void onSuccess(Map<String, String> stringStringMap) {
+                  
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
 
-  **Step two:**
+  **With the extend information:**
 
-  The result will be called back by [didReceiveEMSSystemInfo] in WTWifiCenterDelegate.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
+  We provide query methods for extended parameters as follows:
 
   ```java
-   @Override
-   public void didReceiveEMSSystemInfo(WTSystemModel wtSystemModel) {
-              
-   }
+      WTWifiCenter.getInstance().loadSystemInfoByExtendProtocol(new Callback<Map<String, String>>() {
+              @Override
+              public void onSuccess(Map<String, String> stringStringMap) {
+  
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
 
 * How to load the running information of energy management system?
 
-  **Step one:**
+  **Just call this api:**
 
-  Send EMS commands to query the running information of energy storage devices.
-
-  ```java
-  WTWifiCenter.getInstance(this).sendRuningInfoCommand();
-  ```
-
-  **Step two:**
-
-  The result will be called back by [didReceiveEMSRunningInfo] in WTWifiCenterDelegate.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
+  The result will be called back by `loadRunningInfo`.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
 
   ```java
-  @Override
-  public void didReceiveEMSRunningInfo(WTRunningModel wtRunningModel) {
+       WTWifiCenter.getInstance().loadRunningInfo(new Callback<Map<String, String>>() {
+              @Override
+              public void onSuccess(Map<String, String> stringStringMap) {
                   
-  }
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
 
-* How to load the safety information of energy management system?
+  **With the extend information:**
 
-  **Step one:**
-
-  Send EMS commands to query the safety information of energy storage devices.
+  We provide query methods for extended parameters as follows:
 
   ```java
-  WTWifiCenter.getInstance(this).sendSafetyInfoCommand();
-  ```
-
-  **Step two:**
-
-  The result will be called back by [didReceiveEMSSafetyInfo] in WTWifiCenterDelegate.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
-
-  ```java
-  @Override
-  public void didReceiveEMSSafetyInfo(WTSafetyModel wtSafetyModel) {
+        WTWifiCenter.getInstance().loadRunningInfoByExtendProtocol(new Callback<Map<String, String>>() {
+              @Override
+              public void onSuccess(Map<String, String> stringStringMap) {
                   
-  }
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
 
-* And the last question, how to configuration the energy storage device with parameters?
+* How to load the italian safety self-check information of energy management system?
+
+  **Just call this api:**
+
+  The result will be called back by `loadAutoCheckInfoWithItalianSafety`.But it should be noted that this is not a very stable callback, you may try to send the command multiple times after ensuring that the direct connection is successful.
 
   ```java
-  WTUpdateModel updateModel = new WTUpdateModel();
-  updateModel.setACDC("3");
-  updateModel.setCTRate("1");
-  updateModel.setOnGridCap("5000");
-  ...        
-  WTWifiCenter.getInstance(this).updateEMSConfigurationWith(updateModel);
+         WTWifiCenter.getInstance().loadAutoCheckInfoWithItalianSafety(new Callback<Map<String, String>>() {
+              @Override
+              public void onSuccess(Map<String, String> stringStringMap) {
+                  
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
   ```
 
-  **Note:**
+* How to configuration the energy storage device with parameters?
 
-  When the configuration success, the delegate method [didUpdateEMSParametersSuccess] will be called. And otherwise, the delegate method [didUpdateEMSParametersFailed] will be called.
+  ```java
+   WTUpdateModel updateModel = new WTUpdateModel();
+          updateModel.setACDC("1");
+          WTWifiCenter.getInstance().updateEMSConfiguration(updateModel, new Callback<Boolean>() {
+              @Override
+              public void onSuccess(Boolean result) {
+                
+              }
+  
+              @Override
+              public void onError(Exception e) {
+                 
+              }
+          });
+  ```
+
+  **With the extend parameters:**
+
+  We provide update methods for extended parameters as follows:
+
+  ```java
+  WTUpdateExtendModel updateModel = new WTUpdateExtendModel();
+          updateModel.setOnGridPower("1024");
+          WTWifiCenter.getInstance().updateEMSConfigurationByExtendProtocol(updateModel, new Callback<Boolean>() {
+              @Override
+              public void onSuccess(Boolean result) {
+  
+              }
+  
+              @Override
+              public void onError(Exception e) {
+  
+              }
+          });
+  ```
 
 ## Issues
 
@@ -234,7 +228,6 @@ If you have any questions about the sdk, we welcome you to open issues. But when
 
 ## Feature
 
-We will work on a more stable implementation.
+We will support querying self-test information through EMS, including meter self-test information and battery self-test information. Although the SDK currently provides this API `loadAutoCheckInfo`, since the EMS system does not currently support it, you will always get null through this API. But don't worry, we will work on it all the time!
 
-
-
+If you have any questions, you can contact me anytime.
