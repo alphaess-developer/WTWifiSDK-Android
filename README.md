@@ -10,8 +10,8 @@ The system requirement for WTWifiSDK is Android 5.0
 
 * Place wifisdk-2.1.5.aar in the libs directory of the project into the libs directory of your own project
 
-  
-  
+* Put android:usesCleartextTraffic="true" in the application node of the project AndroidManifest.xml
+
 * Add the following configuration to the module's build.gradle file.
 
   ```groovy
